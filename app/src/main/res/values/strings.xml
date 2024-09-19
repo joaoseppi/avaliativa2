@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">avaliativa2</string>
+    <string name="Inserir_dados">Inserir dados</string>
+    <string name="Consultar">Consultar</string>
+    <string name="Inserir">Inserir</string>
+    <string name="Nome">Nome</string>
+    <string name="Valor">Valor</string>
+    <string name="X">X</string>
+    <string name="Voltar">Voltar</string>
+    <string name="Carregando">Carregando...</string>
+</resources>

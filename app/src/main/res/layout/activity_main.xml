@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#5177FF"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/bt_inserir_dados"
+        android:layout_width="177dp"
+        android:layout_height="129dp"
+        android:layout_marginStart="116dp"
+        android:layout_marginTop="168dp"
+        android:backgroundTint="#0021FF"
+        android:text="@string/Inserir_dados"
+        android:textColor="#FFFEFE"
+        android:textColorLink="#F4F4F4"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/bt_consultar"
+        android:layout_width="168dp"
+        android:layout_height="121dp"
+        android:layout_marginStart="121dp"
+        android:layout_marginTop="129dp"
+        android:backgroundTint="#0021FF"
+        android:text="@string/Consultar"
+        android:textColor="#F6F3F3"
+        android:textColorLink="#FFFFFF"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bt_inserir_dados" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
