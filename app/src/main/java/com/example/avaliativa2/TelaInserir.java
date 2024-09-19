@@ -94,36 +94,35 @@ public class TelaInserir extends AppCompatActivity implements LocationListener, 
             @Override
             public void onClick(View view) {
                 value = etValue.getText().toString();
+                boolean ok = true;
 
                 if (numProd != null) {
-                    if (numProd.equals("000001") || numProd.equals("000003") || numProd.equals("000004")){
+                    if (numProd.equals("1") || numProd.equals("3") || numProd.equals("4")) {
                         if (!value.equals("0") && !value.equals("1")) {
-                            Toast.makeText(TelaInserir.this,"Valor inválido! Deve ser 0 ou 1 para o produto " + numProd,  Toast.LENGTH_SHORT).show();
-                            return;
-
+                            Toast.makeText(TelaInserir.this, "Valor inválido! Deve ser 0 ou 1 para o produto " + numProd, Toast.LENGTH_SHORT).show();
+                            ok = false;
                         }
-                    } else if (numProd.equals("000006")){
+                    } else if (numProd.equals("6")) {
                         if (!value.matches("[0-9]+")) {
-                                Toast.makeText(TelaInserir.this, "Valor inválido! Deve ser um número inteiro para o produto " + numProd, Toast.LENGTH_SHORT).show();
-                            return;
+                            Toast.makeText(TelaInserir.this, "Valor inválido! Deve ser um número inteiro para o produto " + numProd, Toast.LENGTH_SHORT).show();
+                            ok = false;
                         }
-                    } else if (numProd.equals("000005")) {
-                        // Validação para TEXT (qualquer texto é permitido)
+                    } else if (numProd.equals("5")) {
                         if (value.trim().isEmpty()) {
                             Toast.makeText(TelaInserir.this, "Valor inválido! O campo de texto não pode estar vazio para o produto " + numProd, Toast.LENGTH_SHORT).show();
-                            return;
+                            ok = false;
                         }
-                    } else if (numProd.equals("000002")) {
-                        // Validação para FLOAT (número decimal no formato X.X)
-                        if (!value.matches("[0-9]+\\.[0-9]+")) {
+                    } else if (numProd.equals("2")) {
+                        if (!value.matches("^[-+]?\\d*.?\\d*$")) {
                             Toast.makeText(TelaInserir.this, "Valor inválido! Deve ser um número decimal (ex: 10.5) para o produto " + numProd, Toast.LENGTH_SHORT).show();
-                            return;
+                            ok = false;
                         }
                     }
+                    if(ok){
+                        executePost();
+                    }
+
                 }
-
-
-                executePost();
             }
         });
 
