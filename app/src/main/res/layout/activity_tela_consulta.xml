@@ -7,28 +7,34 @@
     android:background="#5177FF"
     tools:context=".TelaConsulta">
 
-    <TextView
-        android:id="@+id/tv_dados"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:clickable="true"
-        android:contextClickable="true"
-        android:cursorVisible="true"
-        android:requiresFadingEdge="horizontal|vertical"
-        android:scrollbars="horizontal|vertical"
-        android:text="TextView"
-        android:textColor="#000000"
-        android:textIsSelectable="true"
-        android:textSize="12sp"
-        android:verticalScrollbarPosition="right"
+    <Spinner
+        android:id="@+id/s_cproduct_id"
+        android:layout_width="389dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="128dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.08"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.060000002" />
+        app:layout_constraintTop_toBottomOf="@+id/webview" />
+
+    <WebView
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="200dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </WebView>
 
     <Button
         android:id="@+id/bt_voltar_consulta"

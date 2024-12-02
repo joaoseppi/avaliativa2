@@ -47,6 +47,7 @@ import java.util.Map;
 
 public class TelaInserir extends AppCompatActivity implements LocationListener, AdapterView.OnItemSelectedListener {
 
+
     private LocationManager mlocManager = null;
 
     private Button btInserir2 = null;
