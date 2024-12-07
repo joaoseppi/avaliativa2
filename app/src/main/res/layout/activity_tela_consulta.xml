@@ -15,7 +15,8 @@
         android:layout_marginTop="128dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="30dp"
-        android:spinnerMode="dialog"
+        android:scrollbars="vertical"
+        android:spinnerMode="dropdown"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -56,7 +57,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginBottom="10dp"
         android:text="@string/Ultima_info"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/webview"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

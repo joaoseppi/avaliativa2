@@ -61,6 +61,7 @@ public class TelaConsulta extends AppCompatActivity {
         scProductId.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                String lastdate = null;
                 String selectedProductId = scProductId.getSelectedItem().toString();
 
                 if (selectedProductId.equals("Selecione uma opção")) {
@@ -69,7 +70,7 @@ public class TelaConsulta extends AppCompatActivity {
 
                 String[] parts = selectedProductId.split("- ");
                 numProd = parts[0];
-                String lastdate = null;
+
 
                 // Realize a consulta no banco filtrando pelo ProductId
                 Cursor cursor = db.query("waterManager", new String[]{"latitude", "longitude", "dateinsert"}, "productid=?", new String[]{numProd}, null, null, null);
@@ -80,7 +81,7 @@ public class TelaConsulta extends AppCompatActivity {
                     coordinates.append("[")
                             .append(cursor.getString(0)).append(", ") // Latitude
                             .append(cursor.getString(1)).append(", ") // Longitude
-                            .append("0.5") // Intensidade fixa
+                            .append("0.75") // Intensidade fixa
                             .append("],");
                     lastdate = cursor.getString(2);
                 }
