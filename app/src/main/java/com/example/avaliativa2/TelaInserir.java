@@ -8,6 +8,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -74,7 +75,7 @@ public class TelaInserir extends AppCompatActivity implements LocationListener, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inserir);
 
-        db = new DatabaseManager(this, "BancoDados", null, 1).getWritableDatabase();
+        db = new DatabaseManager(this, "BancoDadosW", null, 1).getWritableDatabase();
 
         atualizaDados();
 
@@ -83,6 +84,8 @@ public class TelaInserir extends AppCompatActivity implements LocationListener, 
         etValue = (EditText) (findViewById(R.id.et_value));
 
         mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        verificarGPS();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -94,6 +97,11 @@ public class TelaInserir extends AppCompatActivity implements LocationListener, 
         btInserir2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (lat == 0.0 && lon == 0.0) {
+                    verificarGPS();
+                    return;
+                }
+                
                 value = etValue.getText().toString();
                 boolean ok = true;
 
@@ -159,7 +167,6 @@ public class TelaInserir extends AppCompatActivity implements LocationListener, 
                 // O que fazer quando nada é selecionado (opcional)
             }
         });
-
 
     }
 
@@ -253,4 +260,16 @@ public class TelaInserir extends AppCompatActivity implements LocationListener, 
         }
         cur.close();  // Fechar o cursor após o uso
     }
+
+    private void verificarGPS() {
+        if (!mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Toast.makeText(this, "O GPS não está ativado. Por favor, ative-o para continuar.", Toast.LENGTH_SHORT).show();
+
+            // Abre as configurações de localização
+            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+        }
+    }
 }
+
+

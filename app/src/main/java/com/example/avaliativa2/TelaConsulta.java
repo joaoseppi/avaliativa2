@@ -40,7 +40,7 @@ public class TelaConsulta extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tela_consulta);
 
-        db = new DatabaseManager(this, "BancoDados", null, 1).getWritableDatabase();
+        db = new DatabaseManager(this, "BancoDadosW", null, 1).getWritableDatabase();
 
         WebView webView = (WebView) findViewById(R.id.webview);
         webView.getSettings().setJavaScriptEnabled(true);

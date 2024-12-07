@@ -15,9 +15,6 @@ import com.android.volley.toolbox.Volley;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by wolf on 15/03/17.
- */
 
 public class DatabaseManager extends SQLiteOpenHelper {
     private int last_id = 0;
@@ -48,7 +45,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     public void deleteDatabase(Context context) {
-        context.deleteDatabase("BancoDados1");
+
     }
 }
 

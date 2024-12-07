@@ -1,13 +1,22 @@
 package com.example.avaliativa2;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,9 +35,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LocationListener{
 
     private static final int REQUEST_CODE_LOCATION_PERMISSIONS = 1;
+
+    private LocationManager mlocManager = null;
+
+    private double lon, lat;
 
     private Button btInserir = null;
 
@@ -36,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     private SQLiteDatabase db = null;
     private Cursor cur = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +60,18 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_CODE_LOCATION_PERMISSIONS);
         }
 
-        db = new DatabaseManager(this, "BancoDados", null, 1).getWritableDatabase();
+        db = new DatabaseManager(this, "BancoDadosW", null, 1).getWritableDatabase();
+        //DatabaseManager dbm = new DatabaseManager(this);
+        //dbm.deleteDatabase(BancoDados);
+
         executeGetProd();
         executeGetWater();
+
+        mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        mlocManager.requestLocationUpdates(LocationManager.FUSED_PROVIDER, 10, 0, this);
+
+        verificarAlertasProximos();
 
         btInserir = (Button) findViewById(R.id.bt_inserir_dados);
         btInserir.setOnClickListener(new View.OnClickListener() {
@@ -244,7 +267,76 @@ public class MainActivity extends AppCompatActivity {
         return lastId;
     }
 
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+        lon = (location.getLongitude());
+        lat = (location.getLatitude());
+        salvarLocalizacao(lat,lon);
+    }
 
+    @Override
+    public void onProviderEnabled(@NonNull String provider) {
+        LocationListener.super.onProviderEnabled(provider);
+    }
+
+    @Override
+    public void onProviderDisabled(@NonNull String provider) {
+        LocationListener.super.onProviderDisabled(provider);
+    }
+
+    private void salvarLocalizacao(double latitude, double longitude) {
+        SharedPreferences sharedPreferences = getSharedPreferences("UsuarioLocalizacao", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putFloat("latitude", (float) latitude);
+        editor.putFloat("longitude", (float) longitude);
+        editor.apply();
+    }
+
+    private double[] obterLocalizacao() {
+        SharedPreferences sharedPreferences = getSharedPreferences("UsuarioLocalizacao", MODE_PRIVATE);
+        double latitude = sharedPreferences.getFloat("latitude", 0.0f);
+        double longitude = sharedPreferences.getFloat("longitude", 0.0f);
+        return new double[]{latitude, longitude};
+    }
+
+    private void enviarNotificacao() {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        String canalId = "canal_alertas";
+
+        // Criar o canal (necessário para Android 8+)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel canal = new NotificationChannel(canalId, "Alertas", NotificationManager.IMPORTANCE_HIGH);
+            canal.setDescription("Canal para alertas de falta de água/energia");
+            notificationManager.createNotificationChannel(canal);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, canalId)
+                .setSmallIcon(R.mipmap.ic_launcher) // Ícone da notificação
+                .setContentTitle("Alerta nas proximidades")
+                .setContentText("Falta de água ou energia registrada nas proximidades.")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true);
+
+        notificationManager.notify(1, builder.build());
+    }
+
+    private void verificarAlertasProximos() {
+        // Obter a localização salva
+        double[] localizacao = obterLocalizacao();
+        double usuarioLat = localizacao[0];
+        double usuarioLon = localizacao[1];
+
+        // Consultar o banco de dados por alertas próximos
+        String query = "SELECT * FROM waterManager WHERE ABS(latitude - ?) < 0.01 AND ABS(longitude - ?) < 0.01";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(usuarioLat), String.valueOf(usuarioLon)});
+
+        if (cursor.getCount() > 0) {
+            // Se houver alertas, enviar notificação
+            enviarNotificacao();
+        }
+
+        cursor.close();
+    }
 
 }
 
