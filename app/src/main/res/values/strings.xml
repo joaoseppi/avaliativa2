@@ -8,4 +8,5 @@
     <string name="X">X</string>
     <string name="Voltar">Voltar</string>
     <string name="Carregando">Carregando...</string>
+    <string name="Ultima_info">Última informação: </string>
 </resources>

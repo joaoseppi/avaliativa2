@@ -23,7 +23,7 @@ public class TelaConsulta extends AppCompatActivity {
 
     private Button btVoltarConsulta = null;
 
-    private TextView tvDados = null;
+    private TextView tvDate = null;
 
     private SQLiteDatabase db =null;
 
@@ -47,11 +47,7 @@ public class TelaConsulta extends AppCompatActivity {
         webView.setWebViewClient(new WebViewClient());
         webView.loadUrl("file:///android_asset/mapa.html");
 
-// Passando as coordenadas para o HTML
-        String latitude = "51.505"; // Exemplo, deve vir do banco de dados
-        String longitude = "51.505"; // Exemplo, deve vir do banco de dados
-
-        webView.evaluateJavascript("setMapData(" + latitude + ", " + longitude + ");", null);
+        tvDate = (TextView) findViewById(R.id.tv_date);
 
         atualizaDados();
 
@@ -66,23 +62,44 @@ public class TelaConsulta extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 String selectedProductId = scProductId.getSelectedItem().toString();
+
+                if (selectedProductId.equals("Selecione uma opção")) {
+                    return;
+                }
+
                 String[] parts = selectedProductId.split("- ");
                 numProd = parts[0];
+                String lastdate = null;
 
                 // Realize a consulta no banco filtrando pelo ProductId
-                Cursor cursor = db.query("waterManager", new String[]{"latitude", "longitude"}, "productid=?", new String[]{numProd}, null, null, null);
+                Cursor cursor = db.query("waterManager", new String[]{"latitude", "longitude", "dateinsert"}, "productid=?", new String[]{numProd}, null, null, null);
 
                 // Coletando coordenadas e passando para a WebView
-                StringBuilder latitudes = new StringBuilder();
-                StringBuilder longitudes = new StringBuilder();
+                StringBuilder coordinates = new StringBuilder("[");
                 while (cursor.moveToNext()) {
-                    latitudes.append(cursor.getString(0)).append(",");
-                    longitudes.append(cursor.getString(1)).append(",");
+                    coordinates.append("[")
+                            .append(cursor.getString(0)).append(", ") // Latitude
+                            .append(cursor.getString(1)).append(", ") // Longitude
+                            .append("0.5") // Intensidade fixa
+                            .append("],");
+                    lastdate = cursor.getString(2);
                 }
                 cursor.close();
 
-                // Passar as coordenadas filtradas para a WebView
-                webView.evaluateJavascript("setMapData([" + latitudes.toString() + "], [" + longitudes.toString() + "]);", null);
+                if (coordinates.length() > 1) {
+                    coordinates.setLength(coordinates.length() - 1); // Remove a última vírgula
+                }
+                coordinates.append("]");
+
+                webView.evaluateJavascript("setMapData(" + coordinates + ");", null);
+                Log.d("WebViewData", "Coordenadas: " + coordinates);
+
+                if(lastdate == null){
+                    lastdate =  "Sem informações";
+                } else {
+                lastdate = ("Última informação: " + lastdate);
+                }
+                tvDate.setText(lastdate);
             }
 
             @Override
@@ -112,6 +129,8 @@ public class TelaConsulta extends AppCompatActivity {
         cur = db.query("product", new String[]{"productid", "description"}, null, null, null, null, null);
 
         productsList.clear();
+
+        productsList.add("Selecione uma opção");
 
         if (cur.moveToFirst()) {
             do {
