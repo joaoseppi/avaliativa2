@@ -41,9 +41,9 @@
         android:layout_marginTop="168dp"
         android:ems="10"
         android:inputType="text"
-        android:text="@string/Valor"
-        android:textColor="#000000"
         android:selectAllOnFocus="true"
+        android:text="@string/Valor"
+        android:textColor="#FFFFFF"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/s_product_id" />
 

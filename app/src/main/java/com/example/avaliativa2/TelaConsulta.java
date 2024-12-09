@@ -35,6 +35,8 @@ public class TelaConsulta extends AppCompatActivity {
 
     private String numProd = null;
 
+    private double lon, lat;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,9 +44,20 @@ public class TelaConsulta extends AppCompatActivity {
 
         db = new DatabaseManager(this, "BancoDadosW", null, 1).getWritableDatabase();
 
+        lat = getIntent().getDoubleExtra("latitude", 0.0f);
+        lon = getIntent().getDoubleExtra("longitude", 0.0f);
+
         WebView webView = (WebView) findViewById(R.id.webview);
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.setWebViewClient(new WebViewClient());
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                if(lat!=0.0 && lon!=0.0) {
+                    String javascript = String.format("map.setView([%f, %f], 13);", lat, lon);
+                    webView.evaluateJavascript(javascript, null);
+                }
+            }
+        });
         webView.loadUrl("file:///android_asset/mapa.html");
 
         tvDate = (TextView) findViewById(R.id.tv_date);

@@ -4,8 +4,9 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
         android:allowBackup="true"
@@ -18,6 +19,11 @@
         android:theme="@style/Theme.Avaliativa1"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <service
+            android:name=".Services"
+            android:enabled="true"
+            android:exported="false"></service>
+
         <activity
             android:name=".TelaConsulta"
             android:exported="false" />
@@ -29,12 +35,9 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
-
-    <uses-permission android:name="android.permission.INTERNET"> </uses-permission>
 
 </manifest>
