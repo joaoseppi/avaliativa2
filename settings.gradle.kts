@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "avaliativa2"
+rootProject.name = "avisaki"
 include(":app")
  

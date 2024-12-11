@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.avaliativa2"
+    namespace = "com.example.avisaki"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.avaliativa2"
+        applicationId = "com.example.avisaki"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

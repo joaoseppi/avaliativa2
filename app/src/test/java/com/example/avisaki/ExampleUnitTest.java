@@ -1,4 +1,4 @@
-package com.example.avaliativa2;
+package com.example.avisaki;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.example.avaliativa2;
+package com.example.avisaki;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -63,7 +63,7 @@ public class TelaConsulta extends AppCompatActivity {
                 String javascript = String.format("setInitialView(%f, %f);", lat, lon);
                 webView.evaluateJavascript(javascript, null);
             }
-        }, 4000);
+        }, 5000);
 
 
 
