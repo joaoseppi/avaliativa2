@@ -5,8 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -49,16 +52,21 @@ public class TelaConsulta extends AppCompatActivity {
 
         WebView webView = (WebView) findViewById(R.id.webview);
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                if(lat!=0.0 && lon!=0.0) {
-                    String javascript = String.format("map.setView([%f, %f], 13);", lat, lon);
-                    webView.evaluateJavascript(javascript, null);
-                }
-            }
-        });
+        webView.getSettings().setAllowFileAccess(true);
+        webView.getSettings().setAllowContentAccess(true);
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         webView.loadUrl("file:///android_asset/mapa.html");
+
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            if (lat != 0.0 && lon != 0.0) {
+                String javascript = String.format("setInitialView(%f, %f);", lat, lon);
+                webView.evaluateJavascript(javascript, null);
+            }
+        }, 4000);
+
+
+
 
         tvDate = (TextView) findViewById(R.id.tv_date);
 
