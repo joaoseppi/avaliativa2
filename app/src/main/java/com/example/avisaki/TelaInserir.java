@@ -82,8 +82,9 @@ public class TelaInserir extends AppCompatActivity implements LocationListener, 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-
-        mlocManager.requestLocationUpdates(LocationManager.FUSED_PROVIDER, 10, 0, this);
+        else {
+            mlocManager.requestLocationUpdates(LocationManager.FUSED_PROVIDER, 10, 0, this);
+        }
 
         btInserir2 = (Button) findViewById(R.id.bt_inserir2);
         btInserir2.setOnClickListener(new View.OnClickListener() {

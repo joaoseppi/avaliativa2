@@ -45,8 +45,15 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         //DatabaseManager dbm = new DatabaseManager(this);
         //dbm.deleteDatabase(BancoDados);
 
+        mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        verificarGPS();
+
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_CODE_LOCATION_PERMISSIONS);
+        }
+        else {
+            mlocManager.requestLocationUpdates(LocationManager.FUSED_PROVIDER, 10, 0, this);
         }
 
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
@@ -55,12 +62,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
 
         Intent serviceIntent = new Intent(this, Services.class);
         startService(serviceIntent);
-
-        mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        mlocManager.requestLocationUpdates(LocationManager.FUSED_PROVIDER, 10, 0, this);
-
-        verificarGPS();
 
         btInserir = (Button) findViewById(R.id.bt_inserir_dados);
         btInserir.setOnClickListener(new View.OnClickListener() {
