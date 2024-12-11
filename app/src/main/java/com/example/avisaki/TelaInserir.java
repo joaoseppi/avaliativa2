@@ -207,7 +207,6 @@ public class TelaInserir extends AppCompatActivity implements LocationListener, 
     public void executePost() {
         RequestQueue queue = Volley.newRequestQueue(this);
 
-
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
                 "http://177.44.248.13:8080/WaterManager/?op=INSERT",

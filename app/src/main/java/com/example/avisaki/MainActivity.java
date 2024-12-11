@@ -13,6 +13,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity implements LocationListener{
 
     private static final int REQUEST_CODE_LOCATION_PERMISSIONS = 1;
+    private static final int REQUEST_CODE_NOTIFICATION_PERMISSION = 2;
 
     private LocationManager mlocManager = null;
 
@@ -46,6 +48,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_CODE_LOCATION_PERMISSIONS);
         }
+
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, REQUEST_CODE_NOTIFICATION_PERMISSION);
+            }
 
         Intent serviceIntent = new Intent(this, Services.class);
         startService(serviceIntent);

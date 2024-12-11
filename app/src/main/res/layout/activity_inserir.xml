@@ -43,7 +43,7 @@
         android:inputType="text"
         android:selectAllOnFocus="true"
         android:text="@string/Valor"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/s_product_id" />
 
