@@ -63,7 +63,7 @@ public class TelaConsulta extends AppCompatActivity {
                 String javascript = String.format("setInitialView(%f, %f);", lat, lon);
                 webView.evaluateJavascript(javascript, null);
             }
-        }, 5000);
+        }, 4000);
 
 
 
@@ -94,19 +94,23 @@ public class TelaConsulta extends AppCompatActivity {
 
 
                 // Realize a consulta no banco filtrando pelo ProductId
-                Cursor cursor = db.query("waterManager", new String[]{"latitude", "longitude", "dateinsert"}, "productid=?", new String[]{numProd}, null, null, null);
-
+                if(numProd=="1" || numProd=="3" || numProd=="4" || numProd=="5") {
+                    cur = db.query("waterManager", new String[]{"latitude", "longitude", "dateinsert"}, "productid=?", new String[]{numProd}, null, null, null);
+                }
+                else{
+                    cur = db.query("waterManager", new String[]{"latitude", "longitude", "dateinsert"}, "productid=?", new String[]{numProd}, null, null, null);
+                }
                 // Coletando coordenadas e passando para a WebView
                 StringBuilder coordinates = new StringBuilder("[");
-                while (cursor.moveToNext()) {
+                while (cur.moveToNext()) {
                     coordinates.append("[")
-                            .append(cursor.getString(0)).append(", ") // Latitude
-                            .append(cursor.getString(1)).append(", ") // Longitude
+                            .append(cur.getString(0)).append(", ") // Latitude
+                            .append(cur.getString(1)).append(", ") // Longitude
                             .append("0.75") // Intensidade fixa
                             .append("],");
-                    lastdate = cursor.getString(2);
+                    lastdate = cur.getString(2);
                 }
-                cursor.close();
+                cur.close();
 
                 if (coordinates.length() > 1) {
                     coordinates.setLength(coordinates.length() - 1); // Remove a última vírgula

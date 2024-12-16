@@ -138,6 +138,7 @@ public class AlertaWorker extends Worker implements LocationListener {
     public void executeGetWater() {
         int limit = 1000;
         int lastSavedId = getLastSavedId("waterManager"); // Obtém o último ID salvo no banco de dados
+        String lastSavedDate = getLastSavedDate("waterManager");
 
         RequestQueue queue = Volley.newRequestQueue(mContext);
 
@@ -156,7 +157,7 @@ public class AlertaWorker extends Worker implements LocationListener {
                         }
 
                         if (lastSavedId < lastId) {
-                            String urlConexao = "http://177.44.248.13:8080/WaterManager/?op=SELECT&FORMAT=JSON&LIMIT=" + limit + "&OFFSET=" + lastSavedId;
+                            String urlConexao = "http://177.44.248.13:8080/WaterManager/?op=SELECT&FORMAT=JSON&LIMIT=" + limit + "&DATEINI=" + lastSavedDate;
 
                             // Requisição para obter os dados
                             JsonArrayRequest dataRequest = new JsonArrayRequest(
@@ -191,7 +192,6 @@ public class AlertaWorker extends Worker implements LocationListener {
                                                 // Verificar se há mais dados a serem buscados
                                                 if (response.length() == limit) {
                                                     executeGetWater(); // Buscar mais dados se a resposta foi completa
-                                                    //fazer variavel offset = 0 e se chegar aqui fazer offset += 1000; (dependendo da situação da API)
                                                 }
 
                                             } catch (JSONException e) {
@@ -251,6 +251,21 @@ public class AlertaWorker extends Worker implements LocationListener {
         cur.close();
 
         return lastId;
+    }
+
+    private String getLastSavedDate(String tab) {
+        String lastDate = "";
+        String query = "SELECT MAX(dateinsert) FROM " + tab;
+        cur = db.rawQuery(query, null);
+        if (cur.moveToFirst()) {
+            lastDate = cur.getString(0);
+        }
+        cur.close();
+        if(lastDate!=null) {
+            return lastDate;
+        }else{
+            return lastDate = "2024-09-01";
+        }
     }
 
     @Override
