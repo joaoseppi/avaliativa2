@@ -95,7 +95,7 @@ public class TelaConsulta extends AppCompatActivity {
 
                 // Realize a consulta no banco filtrando pelo ProductId
                 if(numProd=="1" || numProd=="3" || numProd=="4" || numProd=="5") {
-                    cur = db.query("waterManager", new String[]{"latitude", "longitude", "dateinsert"}, "productid=?", new String[]{numProd}, null, null, null);
+                    cur = db.query("waterManager", new String[]{"latitude", "longitude", "dateinsert"}, "productid=? AND CAST(value AS REAL) < 1", new String[]{numProd}, null, null, null);
                 }
                 else{
                     cur = db.query("waterManager", new String[]{"latitude", "longitude", "dateinsert"}, "productid=?", new String[]{numProd}, null, null, null);

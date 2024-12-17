@@ -1,56 +1,97 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Mapa de Calor</title>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
-    <style>
-        html, body, #map {
-            height: 100%;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-        }
-    </style>
-</head>
-<body>
-<div id="map"></div>
-<script>
-    var map = L.map('map').setView([-29.464, -51.96], 13); // Mude para as coordenadas desejadas
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
-
-    window.heat = null; // Variável global para a camada de calor
-
-    // Função global para atualizar o mapa
-    function setMapData(coordinates) {
-        if (window.heat) {
-            map.removeLayer(window.heat); // Remove camada existente
-        }
-        // Adiciona nova camada de calor
-        window.heat = L.heatLayer(coordinates, {
-            radius: 25,
-            gradient: {
-                0.4: 'blue',
-                0.65: 'lime',
-                1: 'red'
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Mapa de Calor</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+        <style>
+            html, body, #map {
+                height: 100%;
+                width: 100%;
+                margin: 0;
+                padding: 0;
             }
-        }).addTo(map);
+            #search-box {
+                position: absolute;
+                top: 10px;
+                left: 50px;
+                z-index: 1000;
+                background: white;
+                padding: 5px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            }
+        </style>
+    </head>
+    <body>
+    <div id="search-box">
+        <input type="text" id="city-input" placeholder="Pesquisar cidade..." />
+        <button onclick="searchCity()">Buscar</button>
+    </div>
+    <div id="map"></div>
+    <script>
+        var map = L.map('map').setView([-29.464, -51.96], 13); // Mude para as coordenadas desejadas
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+        window.heat = null; // Variável global para a camada de calor
+
+        // Função global para atualizar o mapa
+        function setMapData(coordinates) {
+            if (window.heat) {
+                map.removeLayer(window.heat); // Remove camada existente
+            }
+            // Adiciona nova camada de calor
+            window.heat = L.heatLayer(coordinates, {
+                radius: 25,
+                gradient: {
+                    0.4: 'blue',
+                    0.65: 'lime',
+                    1: 'red'
+                }
+            }).addTo(map);
+        }
+
+        function searchCity() {
+            var city = document.getElementById("city-input").value;
+            if (!city) {
+                alert("Digite o nome de uma cidade.");
+                return;
+        }
+
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${city}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.length > 0) {
+                        var lat = data[0].lat;
+                        var lon = data[0].lon;
+
+                        // Atualiza o mapa
+                        map.setView([lat, lon], 13);
+                    } else {
+                        alert("Cidade não encontrada. Verifique o nome.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Erro ao buscar cidade:", error);
+                    alert("Ocorreu um erro ao buscar a cidade.");
+                });
+        }
+
+        function setInitialView(lat, lng) {
+        console.log("setInitialView chamado com: ", lat, lng);
+        if (map) {
+            map.setView([lat, lng], 13);
+        } else {
+            console.error("Map object is not initialized.");
+        }
     }
 
-    function setInitialView(lat, lng) {
-    console.log("setInitialView chamado com: ", lat, lng);
-    if (map) {
-        map.setView([lat, lng], 13);
-    } else {
-        console.error("Map object is not initialized.");
-    }
-}
 
-</script>
-</body>
-</html>
+
+    </script>
+    </body>
+    </html>
 
