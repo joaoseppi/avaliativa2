@@ -309,7 +309,7 @@ public class AlertaWorker extends Worker implements LocationListener {
         double usuarioLon = localizacao[1];
 
         // Consultar o banco de dados por alertas próximos
-        String query = "SELECT * FROM waterManager WHERE ABS(latitude - ?) < 0.01 AND ABS(longitude - ?) < 0.01";
+        String query = "SELECT * FROM waterManager WHERE ABS(latitude - ?) < 0.01 AND ABS(longitude - ?) < 0.01 AND value != '1'";
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(usuarioLat), String.valueOf(usuarioLon)});
 
         if (cursor.getCount() > 0) {
